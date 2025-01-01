@@ -1,0 +1,29 @@
+# Trigger pipeline on changes to the main branch
+trigger:
+  - main
+
+# Specify the VM image to use
+pool:
+  vmImage: 'ubuntu-latest'
+
+# Define pipeline steps
+steps:
+  # Step 1: Checkout the code from the repository
+  - task: Checkout@1
+
+  # Step 2: Set up Python environment
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'  # Use Python 3.x
+      addToPath: true
+
+  # Step 3: Install dependencies
+  - script: |
+      python -m pip install --upgrade pip
+      pip install -r requirements.txt
+    displayName: 'Install dependencies'
+
+  # Step 4: Run tests and display results in logs
+  - script: |
+      pytest --color=yes
+    displayName: 'Run tests'
